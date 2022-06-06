@@ -1,33 +1,62 @@
-import React from 'react'
-import TodoList from 'TodoList.js';
+import React from 'react';
+import TodoList from './TodoList.js';
+import Form from './Form.js';
 
 const toDoList = [
-  {
-    name: 'Organize Garage',
-    id: 1528817077286, // could look different, you could use a timestamp to generate it
-    completed: false
-  },
-  {
-    name: 'Bake Cookies',
-    id: 1528817084358,
-    completed: false
-  }
+  {}
 ];
 
 export default class App extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
       toDoList: toDoList
     }
   }
 
+  toggleComplete = (todoId) => {
+    console.log(todoId);
+    this.setState({
+      toDoList: this.state.toDoList.map(todo => {
+        if (todoId === todo.id){
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        }
+        return todo;
+      })
+    });
+  }
+
+  addTodo = (todo) => {
+    const newTodo = {
+      name: todo,
+      id: Date.now(),
+      completed: false
+    };
+
+    this.setState({
+      toDoList: [...this.state.toDoList, newTodo]
+    });
+  }
+
+  clearCompleted = () => {
+    const newList = this.state.toDoList.filter(todo => {
+      return !todo.completed;
+    });
+
+    this.setState({
+      toDoList: newList
+    })
+  }
+
   render() {
     return (
       <div>
-        Todo App
+        <TodoList toDoList={this.state.toDoList} toggleComplete={this.toggleComplete} />
 
-        <TodoList toDoList={this.state.toDoList} />
+        <Form addTodo={this.addTodo} clearCompleted={this.clearCompleted} />
       </div>
     )
   }
